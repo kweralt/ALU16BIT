@@ -1,0 +1,15 @@
+module manual_test (
+    input clk,  // clock
+    input rst,  // reset
+    input io_dip [3][8], // IO Shield DIP switches
+    input state_change_btn,
+    
+    output io_seg[8],
+    output io_sel[4],
+    output io_led [3][8] // IO Shield LEDs
+  ) {
+
+  always {
+    out = 0;
+  }
+}
