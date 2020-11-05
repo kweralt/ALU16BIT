@@ -1,12 +1,6 @@
-// auto_tester is an automated tester to run test cases 
-// auto_tester starts cycling through the states when start input signal is put to HIGH 
-// alu_statement_tester is instantiated with the parameters input_a, input_b, opcode and the expected output value for each test case
-// state transitions for alu_statement_tester occur when the associated statement test case fsm's DONE signal is HIGH
-// if the associated statement test case's fsm terminated in the ERROR_2 state, alu_tester_auto will be stuck at associated statement test case
-
 module auto_tester (
-    input clk,  // clock : connect to regular 50MHz clock
-    input rst,  // reset
+    input clk,
+    input rst,  
     input start,
     output io_seg[8],
     output io_sel[4],
@@ -14,9 +8,7 @@ module auto_tester (
   ) {
   
   .clk(clk) {
-    .rst(rst) {
-      
-      // INSERT GENERATED fsm & alu_statement_tester HERE  
+    .rst(rst) {      // fsm and alu statement testers
       fsm autostate = {STANDBY, TEST_0, TEST_1, TEST_2, TEST_3, TEST_4, TEST_5, TEST_6, TEST_7, TEST_8, TEST_9, TEST_10, TEST_11, TEST_12, TEST_13, TEST_14, TEST_15, TEST_16, TEST_17, TEST_18, TEST_19, TEST_20, TEST_21, TEST_22, TEST_23, TEST_24, TEST_25, TEST_26, TEST_27, TEST_28, TEST_29, TEST_30, TEST_31, TEST_32, TEST_33};
       alu_statement_tester test_0 (#INPUT_A(16habcd), #INPUT_B(16hef42), #OPCODE(6b000000), #EXPECTED(16h9b0f));
       alu_statement_tester test_1 (#INPUT_A(16h0168), #INPUT_B(16h0168), #OPCODE(6b000000), #EXPECTED(16h02d0));
@@ -61,7 +53,7 @@ module auto_tester (
     io_sel = 0;
     opcode_led = 0;
     
-    // SET ALL alu_statement_tester.start TO 0
+    // start set to 0
     test_0.start = 0;
     test_1.start = 0;
     test_2.start = 0;
@@ -102,7 +94,7 @@ module auto_tester (
         if(start)
           autostate.d = autostate.TEST_0;
       
-      // INSERT GENERATED autostate.TEST_n CASES HERE      
+           
       autostate.TEST_0:
       		io_seg = test_0.io_seg;
       		io_sel = test_0.io_sel;
