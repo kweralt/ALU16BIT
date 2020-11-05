@@ -1,6 +1,6 @@
 module shift16 (
     input a[16],
-    input b[4],
+    input b[16],
     input alufn[2],
     output shift[16]
   ) {
@@ -37,36 +37,42 @@ module shift16 (
     
     // shift by 8 bits
     if (b[3] == 1) {
-      for (i = 0; i < 8; i++) {
-        w[i] = r;
-      }
-      for (i = 8; i < 16; i++) {
-        w[i] = xa[i - 8];
-      }
+    //   for (i = 0; i < 8; i++) {
+    //     w[i] = r;
+    //   }
+    //   for (i = 8; i < 16; i++) {
+    //     w[i] = xa[i - 8];
+    //   }
+		w[7:0] = 8x{r};
+		w[15:8] = xa[7:0];
     } else {
       w = xa;
     }
     
     // shift by 4 bits
     if (b[2] == 1) {
-      for (i = 0; i < 4; i++) {
-        x[i] = r;
-      }
-      for (i = 4; i < 16; i++) {
-        x[i] = w[i-4];
-      } 
+    //   for (i = 0; i < 4; i++) {
+    //     x[i] = r;
+    //   }
+    //   for (i = 4; i < 16; i++) {
+    //     x[i] = w[i-4];
+    //   }
+		x[3:0] = 4x{r};
+		x[15:4] = w[11:0]; 
     } else {
         x = w;
     }
     
     // shift by 2 bits
     if (b[1] == 1) {
-      for (i = 0; i < 2; i++) {
-        y[i] = r;
-      }
-      for (i = 2; i < 16; i++) {
-        y[i] = x[i-2];
-      }
+    //   for (i = 0; i < 2; i++) {
+    //     y[i] = r;
+    //   }
+    //   for (i = 2; i < 16; i++) {
+    //     y[i] = x[i-2];
+    //   }
+		y[1:0] = 2x{r};
+		y [15:2] = x[13:0];
     } else {
         y = x;
     }
@@ -77,20 +83,21 @@ module shift16 (
 //        z[i] = r;
 //      }
       z[0] = r;
-      for (i = 1; i < 16; i++) {
-        z[i] = y[i-1];
-      }
+    //   for (i = 1; i < 16; i++) {
+    //     z[i] = y[i-1];
+    //   }
+		z[15:1] = y[14:0];
     } else {
         z = y;
     }
       
     // reverse outputs for right shift
     if (alufn[0] == 1) {
-      for (i = 0; i < 16; i++) {
-        shift[i] = z[15 - i];
-      }
+    	for (i = 0; i < 16; i++) {
+    		shift[i] = z[15 - i];
+    	}
     } else {
-      shift = z;
+    	shift = z;
     }
   }
 }
