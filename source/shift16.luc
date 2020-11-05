@@ -1,103 +1,20 @@
 module shift16 (
     input a[16],
-    input b[16],
+    input b[4], // 4-bit input since 16bit alu 
+    // max shift is 2 to power of 4
     input alufn[2],
-    output shift[16]
+    output out[16]
   ) {
 
-  sig xa[16]; // input after reversing bits for right shift, is equal to a if left shift
-  sig w[16]; // output of shift by 8 bits from b[3]
-  sig x[16]; // output of shift by 4 bits from b[2]
-  sig y[16]; // output of shift by 2 bits from b[1]
-  sig z[16]; // output of shift by 1 bit from b[0]
-  sig r; // padding 
-  var i; // variable used for iteration
-  
   always {
-  
-    // reverse inputs for right shift
-    if (alufn[0] == 1) {
-      for (i = 0; i < 16; i++) {
-        xa[i] = a[15-i];
-      }
-    } else {
-      xa = a;
-    }
-
-    // logic for arithmetic shift
-    // if alufn[1] is 1, perform sign extension
-    // else, r = 0
-    if (alufn[1] == 1) {
-        r = a[15];
-    } else {
-        r = 0;  
-    }
+  case (alufn[1:0]){
     
-    // shift left logic
-    
-    // shift by 8 bits
-    if (b[3] == 1) {
-    //   for (i = 0; i < 8; i++) {
-    //     w[i] = r;
-    //   }
-    //   for (i = 8; i < 16; i++) {
-    //     w[i] = xa[i - 8];
-    //   }
-		w[7:0] = 8x{r};
-		w[15:8] = xa[7:0];
-    } else {
-      w = xa;
-    }
-    
-    // shift by 4 bits
-    if (b[2] == 1) {
-    //   for (i = 0; i < 4; i++) {
-    //     x[i] = r;
-    //   }
-    //   for (i = 4; i < 16; i++) {
-    //     x[i] = w[i-4];
-    //   }
-		x[3:0] = 4x{r};
-		x[15:4] = w[11:0]; 
-    } else {
-        x = w;
-    }
-    
-    // shift by 2 bits
-    if (b[1] == 1) {
-    //   for (i = 0; i < 2; i++) {
-    //     y[i] = r;
-    //   }
-    //   for (i = 2; i < 16; i++) {
-    //     y[i] = x[i-2];
-    //   }
-		y[1:0] = 2x{r};
-		y [15:2] = x[13:0];
-    } else {
-        y = x;
-    }
-    
-    // shift by 1 bit
-    if (b[0] == 1) {
-//      for (i = 1; i < 16; i++) {
-//        z[i] = r;
-//      }
-      z[0] = r;
-    //   for (i = 1; i < 16; i++) {
-    //     z[i] = y[i-1];
-    //   }
-		z[15:1] = y[14:0];
-    } else {
-        z = y;
-    }
-      
-    // reverse outputs for right shift
-    if (alufn[0] == 1) {
-    	for (i = 0; i < 16; i++) {
-    		shift[i] = z[15 - i];
-    	}
-    } else {
-    	shift = z;
+    // Shift Operations:
+    b00: out = a << b; // SL
+    b01: out = a >> b; // SR
+    b11: out = $signed(a) >>> b; // SRA
+    default: out = a;
+       
     }
   }
-}
+}  
