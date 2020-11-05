@@ -1,5 +1,5 @@
-// alu_tester_auto is an automated tester to run test cases 
-// alu_tester_auto starts cycling through the states when start input signal is put to HIGH 
+// auto_tester is an automated tester to run test cases 
+// auto_tester starts cycling through the states when start input signal is put to HIGH 
 // alu_statement_tester is instantiated with the parameters input_a, input_b, opcode and the expected output value for each test case
 // state transitions for alu_statement_tester occur when the associated statement test case fsm's DONE signal is HIGH
 // if the associated statement test case's fsm terminated in the ERROR_2 state, alu_tester_auto will be stuck at associated statement test case
