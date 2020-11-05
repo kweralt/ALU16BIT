@@ -10,32 +10,56 @@ module alu16bit (
 
   ) {
   
-  sig s[16];
+  // init alu components
+  alu_arithmetic alu_arithmetic;
+  boolean boolean;
+  compare compare;
+  shift16 shift16;
   
-  alu_arithmetic alu_arithmetic (.a(a), .b(b), .alufn(alufn[3:0]));
-  boolean boolean (.a(a), .b(b), .alufn(alufn[3:0]));
-  compare compare (.a(a), .b(b), .alufn(alufn[3:0]));
-  shift16 shift16 (.a(a), .b(b[3:0]), .alufn(alufn[1:0]));
+  // init sig z, v, n as input into compare component
+  sig int_z;
+  sig int_v;
+  sig int_n;
 
   always {
-    z = 0;
-    v = 0;
-    n = 0;
+  
+    // default sig z, v, n = 0
+    int_z = 0;
+    int_v = 0;
+    int_n = 0;
+    
+    alu_arithmetic.alufn = alufn[3:0];
+    alu_arithmetic.a = a;
+    alu_arithmetic.b = b;
+   
+    int_z = alu_arithmetic.z;
+    int_v = alu_arithmetic.v;
+    int_n = alu_arithmetic.n;
+    
+    z = int_z;
+    v = int_v;
+    n = int_n;
+    
+    compare.alufn = alufn[3:0];
+    compare.z = int_z;
+    compare.v = int_v;
+    compare.n = int_n;
+    
+    boolean.alufn = alufn[3:0];
+    boolean.a = a;
+    boolean.b = b;
+    
+    shift16.alufn = alufn[1:0];
+    shift16.a = a;
+    shift16.b = b[3:0];
     
     case (alufn[5:4]) {
-      2b00:
-        s = alu_arithmetic.op;
-        z = alu_arithmetic.z;
-        v = alu_arithmetic.v;
-        n = alu_arithmetic.n;
-      2b01:
-        s = boolean.boole;
-      2b10:
-        s = shift16.shift;
-      2b11:
-        s = compare.s;
-      default: s = 0;
-      }
-    o = s;
+      b00: o = alu_arithmetic.out;
+      b01: o = boolean.out;
+      b10: o = shift16.out;
+      b11: o = compare.out;
+      default: o = 16b0;
+    }
+
   }
 }
