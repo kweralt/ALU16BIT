@@ -38,15 +38,7 @@ module au_top (
     state_change = edge.out;
       
     start_auto_test = 0;
-      
-    led = 8h00;             // turn LEDs off
-
-    usb_tx = usb_rx;        // echo the serial data
     
-    io_led = 3x{{8h00}};    // turn LEDs off
-    io_seg = 8hff;          // turn segments off
-    io_sel = 4hf;           // select no digits
-      
     // initial state of led, seven_seg and selector
     io_led = {8b0, 8b0, 8b0};
     io_seg = manual_test.io_seg;
@@ -68,5 +60,10 @@ module au_top (
            state.d = state.MANUAL;
         }
     }
+    
+    led = 8h00;             // turn LEDs off
+    led = c{3b0, io_button};// connect buttons to LEDs
+    usb_tx = usb_rx;        // echo the serial data
+    
   }
 }
